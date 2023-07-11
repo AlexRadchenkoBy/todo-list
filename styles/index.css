@@ -1,0 +1,110 @@
+body {
+	background-image: url(../Images/zastavka.jpg);
+	background-repeat: no-repeat;
+  	background-position: center center;
+  	background-attachment: fixed;
+	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;
+  	content: "";
+  	opacity: 0.65;
+  	top: 0;
+ 	left: 0;
+ 	bottom: 0;
+  	right: 0;
+  	
+ 	z-index: -1; 
+}
+
+.title {
+	color: seashell;
+    font-size: 47px;
+   	text-align: center;
+   	letter-spacing: 1em;
+}
+
+.general {
+	display: flex;
+	justify-content: space-around;
+}
+
+h2 {
+	text-align: center;
+	color: seashell;
+}
+
+input {
+	color: black;
+	margin-left: 65px;
+	width: 500px;
+	height: 25px;
+	margin-top: 15px;
+	text-align: center;
+	border-color: black;
+	max-width: 500px;
+    box-sizing: border-box;
+}
+
+.button-add {
+	width: 100px; 
+	height: 25px;
+	margin-left: 15px;
+	border-color: black;
+}
+
+.button-add:hover {
+	background-color: grey;
+}
+
+.button-clear {
+	width: 500px; 
+	height: 25px;
+	margin-left: 65px;
+	margin-top: 15px;
+	border-color: black;
+}
+
+.button-clear:hover {
+	background-color: grey;
+}
+
+.list-container {
+	background: #B0E0E6;
+	min-height: 518px;
+    min-width: 353px;
+    max-width: 360px;
+    padding: 5px 5px 5px 5px;
+}
+
+.todo-text {
+    padding: 6px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+}
+
+.list-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 2px solid darkblue;
+	background: ghostwhite;
+    margin-bottom: 5px;
+}
+
+.button-delete {
+	background: red;
+    color: white;
+    display: flex;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-delete:hover {
+	background-color: black;
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Radchenko Aleksandr">
+	<link rel="stylesheet" type="text/css" href=".\Styles\index.css">
+	<title>Todo</title>
+</head>
+<body>
+	<header>
+		<h1 class="title">TODO-DONE</h1>
+	</header>
+	<main>
+		<div class="general">
+			<div class="todo">
+				<h2>Todo</h2>
+				<div class="list-container" id="todo-list">
+			</div>
+			</div>
+			<div class="done">
+				<h2>Done</h2>
+				<div class="list-container" id="done-list">
+				</div>
+			</div>
+		</div>
+		<div class="navigation">
+			<input id="enter" type="text" placeholder="Enter a note">
+			<button class="button-add" onclick="addElements()">Add</button>
+			<button class="button-clear" onclick="deleteElements()">Сlear all saved data</button>
+		</div>
+	</main>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+	<script type="text/javascript">
+		var todoList = document.getElementById('todo-list');
+		new Sortable(todoList, {
+	    	group: 'shared', // set both lists to same group
+	    	animation: 150,
+	    	onAdd: function(evt) {
+			   	var doneList = JSON.parse(localStorage.getItem("doneList")) ?? [];
+			   	doneList.splice(evt.oldIndex, 1);
+			   	localStorage.setItem("doneList", JSON.stringify(doneList));   
+
+			    var list = JSON.parse(localStorage.getItem("todoList")) ?? [];
+			    list.splice(evt.newIndex, 0, JSON.parse(evt.item.children[1].getAttribute("note")));
+			   	localStorage.setItem("todoList", JSON.stringify(list));
+		    }
+		});
+
+		var doneList = document.getElementById('done-list');
+		new Sortable(doneList, {
+		    group: 'shared',
+		    animation: 150,
+		    onAdd: function(evt) {
+			   	var todoList = JSON.parse(localStorage.getItem("todoList")) ?? [];
+			   	todoList.splice(evt.oldIndex, 1);
+			   	localStorage.setItem("todoList", JSON.stringify(todoList));
+			    var list = JSON.parse(localStorage.getItem("doneList")) ?? [];
+			    list.splice(evt.newIndex, 0, JSON.parse(evt.item.children[1].getAttribute("note")));
+			   	localStorage.setItem("doneList", JSON.stringify(list));
+		    }
+
+		  
+		});
+	</script>	
+	<script type="text/javascript">
+		var todoList = JSON.parse(localStorage.getItem("todoList")) ?? [];
+		var doneList = JSON.parse(localStorage.getItem("doneList")) ?? [];
+
+		for (var i = 0; i < todoList.length; i++) {
+			var element = document.createElement("div");
+			element.className = "list-item";
+			var elementP = document.createElement("p");
+			elementP.className = "todo-text";
+			var elementButton = document.createElement("button");
+			elementButton.innerHTML = "X";
+			elementButton.setAttribute("note", JSON.stringify(todoList[i]));
+			elementButton.className = "button-delete";
+			elementButton.onclick = deleteOnceElement;
+			var elementText = document.createTextNode(todoList[i].name);
+			elementP.appendChild(elementText);
+			element.appendChild(elementP);
+			element.appendChild(elementButton);
+			var todoContainer = document.getElementById("todo-list");
+			todoContainer.appendChild(element);
+		}
+
+		for (var i = 0; i < doneList.length; i++) {
+			var element = document.createElement("div");
+			element.className = "list-item";
+			var elementP = document.createElement("p");
+			elementP.className = "todo-text";
+			var elementButton = document.createElement("button");
+			elementButton.innerHTML = "X";
+			elementButton.setAttribute("note", JSON.stringify(doneList[i]));
+			elementButton.className = "button-delete";
+			elementButton.onclick = deleteOnceElement;
+			var elementText = document.createTextNode(doneList[i].name);
+			elementP.appendChild(elementText);
+			element.appendChild(elementP);
+			element.appendChild(elementButton);
+			var todoContainer = document.getElementById("done-list");
+			todoContainer.appendChild(element);
+		}
+			
+
+	    function addElements() {
+	    	var list = JSON.parse(localStorage.getItem("todoList")) ?? [];
+	    	var note = new Object();
+	    	note.id = self.crypto.randomUUID();
+	    	note.name = document.getElementById('enter').value;
+			var element = document.createElement("div");
+			element.className = "list-item";
+			var elementP = document.createElement("p");
+			elementP.className = "todo-text";
+			var elementButton = document.createElement("button");
+			elementButton.innerHTML = "X";
+			elementButton.setAttribute("note", JSON.stringify(note));
+			elementButton.className = "button-delete";
+			elementButton.onclick = deleteOnceElement;
+			var elementText = document.createTextNode(note.name);
+			elementP.appendChild(elementText);
+			element.appendChild(elementP);
+			element.appendChild(elementButton);
+			var todoContainer = document.getElementById('todo-list');
+			todoContainer.appendChild(element);
+			list.push(note);
+			localStorage.setItem("todoList", JSON.stringify(list));
+			document.getElementById("enter").value = "";
+			console.log(elementButton.note);
+		}
+
+		function deleteElements() {
+			if (confirm("Are you sure you want to delete all entries?")) {
+				todoList.length = 0;
+				var list = document.getElementById("todo-list");
+				list.replaceChildren();
+				doneList.length = 0;
+				var list = document.getElementById("done-list");
+				list.replaceChildren();
+				localStorage.clear();
+			}
+		}
+
+		function deleteOnceElement() {
+			if (confirm("Are you sure you want to delete the entry?")) {
+			var listName;
+			if (this.parentNode.parentNode.id == "todo-list") {
+				listName = "todoList";
+			} else {
+				listName = "doneList";
+			}
+			var list = JSON.parse(localStorage.getItem(listName)) ?? [];
+			var indexNote = list.findIndex(note => note.id == JSON.parse(this.getAttribute("note")).id);
+			list.splice(indexNote, 1);
+			localStorage.setItem(listName, JSON.stringify(list));
+			this.parentNode.remove();
+			}
+		}
+				
+	</script>
+</body>
+</html>
